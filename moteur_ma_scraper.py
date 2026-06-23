@@ -183,9 +183,10 @@ def scrape_versions(brand_name: str, model: Model, soup: BeautifulSoup) -> list:
     versions, seen = [], set()
     for a in soup.find_all("a", href=True):
         href = a["href"]
-        if not href.endswith(".html"):
+        parsed_path = urlparse(href).path
+        if not (parsed_path.endswith(".html") and parsed_path.startswith("/fr/neuf/voiture/")):
             continue
-        url = BASE_URL + urlparse(href).path if href.startswith("/") else href
+        url = BASE_URL + parsed_path
         if url in seen:
             continue
         seen.add(url)
